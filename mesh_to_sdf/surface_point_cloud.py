@@ -56,7 +56,7 @@ class SurfacePointCloud:
                 gradients[inside] *= -1
 
         if return_gradients:
-            near_surface = np.abs(distances) < math.sqrt(0.0025**2 * 3) * 3 # 3D 2-norm stdev * 3
+            near_surface = np.abs(distances) < 15* math.sqrt(0.0025**2 * 3) * 3 # 3D 2-norm stdev * 3
             gradients = np.where(near_surface[:, np.newaxis], self.normals[indices[:, 0]], gradients)
             gradients /= np.linalg.norm(gradients, axis=1)[:, np.newaxis]
             return distances, gradients
@@ -106,8 +106,8 @@ class SurfacePointCloud:
         query_points = []
         surface_sample_count = int(number_of_points * 47 / 50) // 2
         surface_points = self.get_random_surface_points(surface_sample_count, use_scans=use_scans)
-        query_points.append(surface_points + np.random.normal(scale=0.0025, size=(surface_sample_count, 3)))
-        query_points.append(surface_points + np.random.normal(scale=0.00025, size=(surface_sample_count, 3)))
+        query_points.append(surface_points + np.random.normal(scale=0.0025*225, size=(surface_sample_count, 3)))
+        query_points.append(surface_points + np.random.normal(scale=0.00025*225, size=(surface_sample_count, 3)))
         
         unit_sphere_sample_count = number_of_points - surface_points.shape[0] * 2
         unit_sphere_points = sample_uniform_points_in_unit_sphere(unit_sphere_sample_count)
